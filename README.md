@@ -1,167 +1,191 @@
-📚 Classical Information Retrieval System
+---
 
-This project implements a comprehensive Information Retrieval (IR) system from scratch, designed to parse, process, and rank documents against user queries. Developed and evaluated using the Cranfield dataset, this system serves as a benchmark for exploring classical and advanced IR techniques.
+# 📚 Classical Information Retrieval System
 
-🚀 Features
+This project implements a **comprehensive Information Retrieval (IR) system** from scratch, designed to parse, process, and rank documents against user queries. Developed and evaluated using the **Cranfield dataset**, this system serves as a benchmark for exploring classical and advanced IR techniques.
 
-End-to-End IR Pipeline: Complete text-processing tools, including:
+---
 
-Sentence Segmentation
+## 🚀 Features
 
-Tokenization
+* **End-to-End IR Pipeline**: Complete text-processing tools, including:
 
-Stopword Removal
+  * Sentence Segmentation
+  * Tokenization
+  * Stopword Removal
+  * Inflection Reduction (Stemming/Lemmatization)
 
-Inflection Reduction (Stemming/Lemmatization)
+* **Multiple Retrieval Models**:
 
-Multiple Retrieval Models:
+  * **Vector Space Model (VSM)**: TF-IDF + Cosine Similarity.
+  * **Latent Semantic Analysis (LSA)**: Uses SVD to reveal hidden semantic structure.
+  * **Case Retrieval Net (CRN)**: Expands queries using a term-term similarity matrix.
 
-Vector Space Model (VSM): TF-IDF + Cosine Similarity.
+* **Typo Correction**: Corrects spelling errors in user queries using edit distance and Jaccard similarity.
 
-Latent Semantic Analysis (LSA): Uses SVD to reveal hidden semantic structure.
+* **Autocomplete**: Suggests query completions based on corpus vocabulary.
 
-Case Retrieval Net (CRN): Expands queries using a term-term similarity matrix.
+* **Modular Architecture**: Clean, reusable, and extendable module structure.
 
-Typo Correction: Corrects spelling errors in user queries using edit distance and Jaccard similarity.
+* **Comprehensive Evaluation**: Implements standard IR metrics:
 
-Autocomplete: Suggests query completions based on corpus vocabulary.
+  * Precision\@k
+  * Mean Average Precision (MAP)
 
-Modular Architecture: Clean, reusable, and extendable module structure.
+---
 
-Comprehensive Evaluation: Implements standard IR metrics:
+## 🏛️ System Architecture
 
-Precision@k
+The system is orchestrated via `main.py` and follows a modular, pipelined structure.
 
-Mean Average Precision (MAP)
+### 1. Preprocessing Pipeline
 
-🏛️ System Architecture
-
-The system is orchestrated via main.py and follows a modular, pipelined structure.
-
-1. Preprocessing Pipeline
+```text
 Input Text
   → Sentence Segmentation
   → Tokenization
   → Stopword Removal
   → Inflection Reduction
   → Processed Tokens
+```
 
-2. Query Handling
+### 2. Query Handling
 
-Same preprocessing pipeline as documents
+* Same preprocessing pipeline as documents
+* **Autocomplete**: Suggests terms as user types
+* **Typo Correction**: Suggests corrections post-query
 
-Autocomplete: Suggests terms as user types
-
-Typo Correction: Suggests corrections post-query
-
-3. Retrieval and Ranking
+### 3. Retrieval and Ranking
 
 Processed query is passed to a retrieval model:
 
-VSM
+* VSM
+* LSA
+* CRN
 
-LSA
+Returns an **ordered list of documents** ranked by relevance.
 
-CRN
+### 4. Evaluation
 
-Returns an ordered list of documents ranked by relevance.
+Compares ranked documents against ground truth (`qrels` file):
 
-4. Evaluation
+* Calculates MAP and Precision\@k
 
-Compares ranked documents against ground truth (qrels file):
+---
 
-Calculates MAP and Precision@k
+## 🛠️ Core Modules
 
-🛠️ Core Modules
-Module	Description
-main.py	Entry point. Manages CLI, preprocessing, retrieval, and evaluation.
-util.py	Manages imports and downloads required NLTK data.
-Preprocessing
+| Module    | Description                                                         |
+| --------- | ------------------------------------------------------------------- |
+| `main.py` | Entry point. Manages CLI, preprocessing, retrieval, and evaluation. |
+| `util.py` | Manages imports and downloads required NLTK data.                   |
 
-sentenceSegmentation.py: Naive or NLTK-based sentence splitting.
+### Preprocessing
 
-tokenization.py: Naive or Penn TreeBank tokenization.
+* `sentenceSegmentation.py`: Naive or NLTK-based sentence splitting.
+* `tokenization.py`: Naive or Penn TreeBank tokenization.
+* `stopwordRemoval.py`: NLTK-based stopword removal.
+* `stopwordRemoval_bottom_up.py`: IDF-based stopword detection.
+* `inflectionReduction.py`: Uses Porter Stemmer and WordNet Lemmatizer.
 
-stopwordRemoval.py: NLTK-based stopword removal.
+### Retrieval Models
 
-stopwordRemoval_bottom_up.py: IDF-based stopword detection.
+* `informationRetrieval.py`: Implements **VSM** with TF-IDF and cosine similarity.
+* `LSA.py`: Implements **LSA** using SVD on the term-document matrix.
+* `CRN.py`: Implements **Case Retrieval Net** for query expansion.
 
-inflectionReduction.py: Uses Porter Stemmer and WordNet Lemmatizer.
+### Query Correction & Autocomplete
 
-Retrieval Models
+* `Vocabulary.py`: Uses bigrams and Jaccard similarity to suggest corrections.
+* `Edit_distance.py`: Implements Levenshtein distance to rank candidates.
+* Autocomplete is integrated in the interactive query input loop in `main.py`.
 
-informationRetrieval.py: Implements VSM with TF-IDF and cosine similarity.
+### Evaluation
 
-LSA.py: Implements LSA using SVD on the term-document matrix.
+* `evaluation.py`: Computes:
 
-CRN.py: Implements Case Retrieval Net for query expansion.
+  * Precision\@k
+  * Recall
+  * Mean Average Precision (MAP)
 
-Query Correction & Autocomplete
+---
 
-Vocabulary.py: Uses bigrams and Jaccard similarity to suggest corrections.
+## ⚙️ Setup and Installation
 
-Edit_distance.py: Implements Levenshtein distance to rank candidates.
+### ✅ Prerequisites
 
-Autocomplete is integrated in the interactive query input loop in main.py.
+* Python 3.x
+* pip
 
-Evaluation
 
-evaluation.py: Computes:
+### 📥 Install Dependencies
 
-Precision@k
+The system uses `NLTK`, `NumPy`, `SciPy`, and `scikit-learn`. Use pip to install dependencies:
 
-Recall
-
-Mean Average Precision (MAP)
-
-⚙️ Setup and Installation
-✅ Prerequisites
-
-Python 3.x
-
-pip
-
-📦 Clone the Repository
-git clone https://github.com/your-username/your-repository-name.git
-cd your-repository-name
-
-📥 Install Dependencies
-
-The system uses NLTK, NumPy, SciPy, and scikit-learn. Use pip to install dependencies:
-
+```bash
 pip install nltk numpy scipy scikit-learn
+```
 
+The first run will automatically download NLTK models via `util.py`.
 
-The first run will automatically download NLTK models via util.py.
+---
 
-💻 Usage
+## 💻 Usage
 
-All functionality is controlled via main.py.
+All functionality is controlled via `main.py`.
 
-1. Evaluate on Cranfield Dataset
+### 1. Evaluate on Cranfield Dataset
+
+```bash
 python main.py -dataset /path/to/cranfield/
+```
 
+* Outputs MAP and other metrics.
+* Saves results in the `output/` directory.
 
-Outputs MAP and other metrics.
+### 2. Interactive Custom Query
 
-Saves results in the output/ directory.
-
-2. Interactive Custom Query
+```bash
 python main.py -dataset /path/to/cranfield/ -custom
+```
 
+* Prompts user for input.
+* Offers **autocomplete** suggestions.
+* Applies **typo correction** if needed.
+* Returns top 5 most relevant document IDs.
 
-Prompts user for input.
+---
 
-Offers autocomplete suggestions.
+## 🧾 Command-Line Arguments
 
-Applies typo correction if needed.
+| Argument      | Description                                 |
+| ------------- | ------------------------------------------- |
+| `-dataset`    | Path to dataset folder (e.g., `cranfield/`) |
+| `-out_folder` | Output folder path (default: `output/`)     |
+| `-segmenter`  | Sentence segmenter: `naive` or `punkt`      |
+| `-tokenizer`  | Tokenizer type: `naive` or `ptb`            |
+| `-custom`     | Enables custom query mode                   |
 
-Returns top 5 most relevant document IDs.
+---
 
-🧾 Command-Line Arguments
-Argument	Description
--dataset	Path to dataset folder (e.g., cranfield/)
--out_folder	Output folder path (default: output/)
--segmenter	Sentence segmenter: naive or punkt
--tokenizer	Tokenizer type: naive or ptb
--custom	Enables custom query mode
+## 📁 Example Folder Structure
+
+```
+your-repository-name/
+│
+├── cranfield/                 # Dataset folder
+├── output/                    # Output results
+├── main.py                    # Main script
+├── util.py                    # Utilities
+├── evaluation.py              # Evaluation metrics
+├── informationRetrieval.py    # VSM model
+├── LSA.py                     # LSA model
+├── CRN.py                     # CRN model
+├── sentenceSegmentation.py    # Sentence segmentation
+├── tokenization.py            # Tokenization
+├── stopwordRemoval.py         # Stopword removal
+├── stopwordRemoval_bottom_up.py
+├── inflectionReduction.py     # Stemming and lemmatization
+├── Vocabulary.py              # Typo correction
+├── Edit_distance.py           # Edit distance calculator
+```
